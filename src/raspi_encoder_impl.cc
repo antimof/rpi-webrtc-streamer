@@ -145,6 +145,11 @@ int32_t RaspiEncoderImpl::InitEncode(const VideoCodec* codec_settings,
     // Setting Video Rotation and Flip setting
     mmal_encoder_->SetVideoRotation(config_media::video_rotation);
     mmal_encoder_->SetVideoFlip(config_media::video_vflip, config_media::video_hflip);
+    mmal_encoder_->SetVideoBrightness(config_media::video_brightness); 
+    mmal_encoder_->SetVideoContrast(config_media::video_contrast);
+    mmal_encoder_->SetVideoShutter(config_media::video_shutter);
+    mmal_encoder_->SetVideoGain(config_media::video_analog_gain, config_media::video_digital_gain);
+
     // Do not use Text Annotataion in RTC video stream
     mmal_encoder_->SetVideoAnnotate(false);
 

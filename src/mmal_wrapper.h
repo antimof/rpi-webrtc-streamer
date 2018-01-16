@@ -40,6 +40,7 @@ namespace webrtc {
 
 
 #define FRAME_BUFFER_SIZE	65536*2
+//#define FRAME_BUFFER_SIZE	231072*2
 #define FRAME_QUEUE_LENGTH 5
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -177,6 +178,10 @@ public:
     void SetInlineMotionVectors(bool motion_enable);
     void SetVideoRotation(int rotation);
     void SetVideoFlip(bool vflip, bool hflip);
+    void SetVideoBrightness(int brightness);
+    void SetVideoContrast(int contrast);
+    void SetVideoShutter(int shutter);
+    void SetVideoGain(float again, float dgain);
     void SetVideoAnnotate(bool annotate_enable);
     void SetVideoAnnotateUserText(const std::string user_text);
     void SetVideoAnnotateTextSize(const int text_size);

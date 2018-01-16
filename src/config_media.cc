@@ -67,6 +67,11 @@ CONFIG_DEFINE( Resolution4_3, resolution_4_3_enable, bool, true );
 CONFIG_DEFINE( VideoRotation, video_rotation, int, 0);
 CONFIG_DEFINE( VideoVFlip, video_vflip, bool, false );
 CONFIG_DEFINE( VideoHFlip, video_hflip, bool, false );
+CONFIG_DEFINE( VideoBrightness, video_brightness, int, 50);
+CONFIG_DEFINE( VideoContrast, video_contrast, int, 0);
+CONFIG_DEFINE( VideoShutter, video_shutter, int, 0);
+CONFIG_DEFINE( VideoAGain, video_analog_gain, float, 0);
+CONFIG_DEFINE( VideoDGain, video_digital_gain, float, 0);
 
 CONFIG_DEFINE( VideoResolutionList43, video_resolution_list_4_3, std::string, \
     "320x240,400x300,512x384,640x480,1024x768,1152x864,1296x972,1640x1232" );
@@ -196,6 +201,11 @@ bool config_load(const std::string config_filename) {
     // loading vflip & hflip
     DEFINE_CONFIG_LOAD_BOOL(VideoVFlip, video_vflip);
     DEFINE_CONFIG_LOAD_BOOL(VideoHFlip, video_hflip);
+    DEFINE_CONFIG_LOAD_INT( VideoBrightness, video_brightness);
+    DEFINE_CONFIG_LOAD_INT( VideoContrast, video_contrast);
+    DEFINE_CONFIG_LOAD_INT( VideoShutter, video_shutter);
+    DEFINE_CONFIG_LOAD_FLOAT( VideoAGain, video_analog_gain);
+    DEFINE_CONFIG_LOAD_FLOAT( VideoDGain, video_digital_gain);
 
     // loading 4:3 or 16:9 resolution config
     DEFINE_CONFIG_LOAD_BOOL(Resolution4_3, resolution_4_3_enable );

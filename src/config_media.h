@@ -69,6 +69,11 @@ namespace config_media {
     extern int video_rotation;
     extern bool video_hflip;
     extern bool video_vflip;
+    extern int video_brightness;
+    extern int video_contrast;
+    extern int video_shutter;
+    extern float video_analog_gain;
+    extern float video_digital_gain;
 
     bool config_load(const std::string config_filename);
 

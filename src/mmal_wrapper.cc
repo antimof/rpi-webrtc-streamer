@@ -374,9 +374,27 @@ void MMALEncoderWrapper::SetVideoRotation(int rotation) {
     state_.camera_parameters.rotation = rotation;
 }
 
+// New params
+void MMALEncoderWrapper::SetVideoBrightness(int brightness) {
+    state_.camera_parameters.brightness = brightness;
+}
+
+void MMALEncoderWrapper::SetVideoContrast(int contrast) {
+    state_.camera_parameters.contrast = contrast;
+}
+
+void MMALEncoderWrapper::SetVideoShutter(int shutter) {
+    state_.camera_parameters.shutter_speed = shutter;
+}
+
 void MMALEncoderWrapper::SetVideoFlip(bool vflip, bool hflip) {
     state_.camera_parameters.vflip = (vflip?1:0);
     state_.camera_parameters.hflip = (hflip?1:0);
+}
+
+void MMALEncoderWrapper::SetVideoGain(float again, float dgain) {
+    state_.camera_parameters.analog_gain =  again;
+    state_.camera_parameters.digital_gain = dgain;
 }
 
 void MMALEncoderWrapper::SetVideoAnnotate(bool annotate_enable) {
