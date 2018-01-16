@@ -14,9 +14,9 @@ var messageCounter = 0;
 var peerConnection;    
 
 var localTestingUrl = "ws://10.0.0.11:8889/rws/ws";
-var pcConfig = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
+var pcConfig = {"iceServers": [{"urls": "stun:stun.l.google.com:19302"}]};
 var pcOptions = { optional: [ {DtlsSrtpKeyAgreement: true} ] };
-var mediaConstraints = {'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true }};
+//var mediaConstraints = {'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true }};
 var remoteStream;
 
 function isPrivateIP(ip) {
@@ -61,7 +61,16 @@ function createPeerConnection() {
 function onRemoteStreamAdded(event) {
     trace("Remote stream added:", event.stream );
     var remoteVideoElement = document.getElementById('remoteVideo');
+    // Hacks for Mobile Safari
+//    remoteVideo.setAttribute("playsinline", true);
+//    remoteVideo.setAttribute("muted", true);
     remoteVideo.srcObject = event.stream;
+
+    setTimeout(() => {
+       remoteVideo.removeAttribute("controls");
+       remoteVideo.muted=false;
+    },5000);
+
 }
 
 function sld_success_cb() {
@@ -81,6 +90,22 @@ function aic_failure_cb() {
 }
 
 
+function handleGetUserMediaError(e) {
+  switch(e.name) {
+    case "NotFoundError":
+      alert("Unable to open your call because no camera and/or microphone" +
+            "were found.");
+      break;
+    case "SecurityError":
+    case "PermissionDeniedError":
+      // Do nothing; this is the same as the user canceling the call.
+      break;
+    default:
+      alert("Error opening your camera and/or microphone: " + e.message);
+      break;
+  }
+}
+
 function doHandlePeerMessage(data) {
     ++messageCounter;
     var dataJson = JSON.parse(data);
@@ -92,7 +117,48 @@ function doHandlePeerMessage(data) {
         dataJson.sdp = sdp_returned;
         // Creating PeerConnection
         createPeerConnection();
-        peerConnection.setRemoteDescription(new RTCSessionDescription(dataJson), onRemoteSdpSucces, onRemoteSdpError);              
+
+var mediaConstraints = {
+	video: false,
+    	audio: {
+        mandatory: {
+		googEchoCancellation: true,
+                googAutoGainControl: true,
+                googAutoGainControl2: true,
+                googNoiseSuppression: true,
+                googHighpassFilter: true,
+                googTypingNoiseDetection: true,
+                //sampleRate: 16000,
+                //sampleSize: 8,
+	    	//channelCount: 1
+        },
+        optional: []
+    	}
+	};
+	var desc = new RTCSessionDescription(dataJson);
+  	peerConnection.setRemoteDescription(desc)
+	.then(function () {
+    		return navigator.mediaDevices.getUserMedia(mediaConstraints);
+  	})
+  	.then(function(localStream) {
+        window.localStream = localStream;
+        peerConnection.addStream(localStream);
+  	})
+	.then(function() {
+    	return peerConnection.createAnswer();
+  	})
+  	.then(function(answer) {
+    	return peerConnection.setLocalDescription(answer);
+  	})
+  	.then(function() {
+	var data = JSON.stringify(peerConnection.localDescription);
+        trace("Sending Answer: " + data );
+        doSend(data);
+	})
+	.catch(handleGetUserMediaError);
+	}
+
+/*        peerConnection.setRemoteDescription(new RTCSessionDescription(dataJson), onRemoteSdpSucces, onRemoteSdpError);              
         peerConnection.createAnswer(function(sessionDescription) {
             trace("Create answer:", sessionDescription);
             peerConnection.setLocalDescription(sessionDescription,sld_success_cb,sld_failure_cb);
@@ -103,9 +169,10 @@ function doHandlePeerMessage(data) {
             trace("Create answer error:", error);
         }, mediaConstraints); // type error           
     }
+*/
     else if (dataJson["type"] == "candidate" ) {    // Processing candidate
         trace("Adding ICE candiate " + dataJson["candidate"]);
-        var candidate = new RTCIceCandidate({sdpMLineIndex: dataJson.sdpMLineIndex, candidate: dataJson.candidate});
+        var candidate = new RTCIceCandidate({sdpMLineIndex: dataJson.label, sdpMid: dataJson.id, candidate: dataJson.candidate});
         peerConnection.addIceCandidate(candidate, aic_success_cb, aic_failure_cb);
     }
 }
@@ -389,6 +456,9 @@ function doDisconnect() {
     if( websocket.readyState == 1)  {
         websocket.close();
     };
+    localStream.getTracks().forEach( (track) => {
+    track.stop();
+    });
 }
 
 
