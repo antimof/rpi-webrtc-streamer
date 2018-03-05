@@ -348,9 +348,9 @@ function ConnectWebSocket() {
     if( location.host == "127.0.0.1" ) 
         websocket_url = localTestingUrl;
     else if( isPrivateIP( location.host ) )
-        websocket_url = "ws://" + location.host + "/rws/ws";
+        websocket_url = "ws://192.168.1.162:8889/rws/ws";
     else
-        websocket_url = "wss://" + location.host + "/rws/ws";
+        websocket_url = "ws://192.168.1.162:8889/rws/ws";
     trace("WebSocket URL : " + websocket_url);
     websocket = new WebSocket(websocket_url);
     websocket.onopen = function(event) { onOpen(event) };

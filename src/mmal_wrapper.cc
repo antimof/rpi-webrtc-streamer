@@ -818,6 +818,7 @@ bool MMALEncoderWrapper::SetRate(int framerate, int bitrate) {
         MMAL_STATUS_T status;
 
         if( state_.bitrate != bitrate * 1000 ) {
+	    RTC_LOG(INFO) << "MMAL frame encoding bitrate changed : "  << bitrate << " bps";
             MMAL_PARAMETER_UINT32_T param =
             {{ MMAL_PARAMETER_VIDEO_BIT_RATE, sizeof(param)}, 
                 (uint32_t)bitrate*1000};

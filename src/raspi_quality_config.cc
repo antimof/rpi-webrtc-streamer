@@ -143,8 +143,7 @@ void QualityConfig::ReportMaxBitrate(int bitrate) {
 
 void QualityConfig::ReportTargetBitrate(int bitrate) {
     if( bitrate == target_bitrate_ ) return;
-     RTC_LOG(INFO) << "Bitrate changed from " << target_bitrate_ 
-        << ", to " << bitrate ;
+    // RTC_LOG(INFO) << "Bitrate changed from " << target_bitrate_ << ", to " << bitrate ;
     target_bitrate_ = bitrate;
 }
 

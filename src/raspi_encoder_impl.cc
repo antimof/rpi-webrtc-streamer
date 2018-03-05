@@ -53,6 +53,10 @@ namespace webrtc {
 
 namespace {
 
+// QP scaling thresholds.
+static const int kLowH264QpThreshold = 24;
+static const int kHighH264QpThreshold = 37;
+
 // Used by histograms. Values of entries should not be changed.
 enum H264EncoderImplEvent {
     kH264EncoderEventInit = 0,
@@ -149,7 +153,6 @@ int32_t RaspiEncoderImpl::InitEncode(const VideoCodec* codec_settings,
     mmal_encoder_->SetVideoContrast(config_media::video_contrast);
     mmal_encoder_->SetVideoShutter(config_media::video_shutter);
     mmal_encoder_->SetVideoGain(config_media::video_analog_gain, config_media::video_digital_gain);
-
     // Do not use Text Annotataion in RTC video stream
     mmal_encoder_->SetVideoAnnotate(false);
 
@@ -213,7 +216,7 @@ int32_t RaspiEncoderImpl::SetRateAllocation(
     QualityConfig::Resolution resolution;
     uint32_t framerate_updated_;
 
-    // TODO (kclyu) :  __FIXED_FRAMERATE__  check at next branch
+    // TODO (kclyu) :  __DYNAMIC_FRAMERATE__  check at next branch
     // 
     // The framerate and bitrate quality control of BWE do not differ 
     // from Branch to Branch but they are still being modified. 
@@ -222,14 +225,15 @@ int32_t RaspiEncoderImpl::SetRateAllocation(
     // 
     // Now it is fixed at 30 fps, but it needs to be modified 
     // so that it is adaptive fps again according to Google implementation situation.
-#ifdef __FIXED_FRAMERATE__
+#define __FIXED_FRAMERATE__
+#ifdef __DYNAMIC_FRAMERATE__
     if( framerate > 30 ) 
         framerate_updated_ = 30;
     else 
         framerate_updated_ = framerate;
 #else
     framerate_updated_ = 30;
-#endif  /*  __FIXED_FRAMERATE__ */
+#endif  /*  __DYNAMIC_FRAMERATE__ */
 
     if (bitrate_allocation.get_sum_bps() <= 0 || framerate <= 0)
         return WEBRTC_VIDEO_CODEC_ERR_PARAMETER;
@@ -334,7 +338,8 @@ int32_t RaspiEncoderImpl::SetPeriodicKeyFrames(bool enable) {
 }
 
 VideoEncoder::ScalingSettings RaspiEncoderImpl::GetScalingSettings() const {
-  return VideoEncoder::ScalingSettings(true);
+  //return VideoEncoder::ScalingSettings(true);
+  return VideoEncoder::ScalingSettings(kLowH264QpThreshold, kHighH264QpThreshold);
 }
 
 
