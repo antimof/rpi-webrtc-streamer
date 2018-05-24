@@ -101,6 +101,11 @@ namespace config_media {
     CONFIG_DEFINE_H( VideoAwbMode, video_awb_mode, std::string);
     CONFIG_DEFINE_H( VideoDrcMode, video_drc_mode, std::string);
     CONFIG_DEFINE_H( VideoStabilisation, video_stabilisation, bool);
+    CONFIG_DEFINE_H( VideoShutter, video_shutter, int);
+    CONFIG_DEFINE_H( VideoAGain, video_analog_gain, float);
+    CONFIG_DEFINE_H( VideoDGain, video_digital_gain, float);
+    CONFIG_DEFINE_H( VideoZoom, video_zoom, float);
+    CONFIG_DEFINE_H( VideoCord, video_cord, float);
 
     // Annotation Text
     CONFIG_DEFINE_H( VideoEnableAnnotateText, video_enable_annotate_text, bool);

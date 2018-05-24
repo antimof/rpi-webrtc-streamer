@@ -48,8 +48,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "raspicamcontrol.h"
 #include "raspicli.h"
 
-// #define __USE_CAMERA_GAIN__
-// ANALOG_GAIN and DIGITAL_GAIN
+#define __USE_CAMERA_GAIN__ 
+//ANALOG_GAIN and DIGITAL_GAIN
 
 /// Structure to cross reference exposure strings against the MMAL parameter equivalent
 static XREF_T  exposure_map[] =

@@ -164,6 +164,9 @@ int32_t RaspiEncoderImpl::InitEncode(const VideoCodec* codec_settings,
     mmal_encoder_->SetVideoAwbMode(config_media::video_awb_mode);
     mmal_encoder_->SetVideoDrcMode(config_media::video_drc_mode);
     mmal_encoder_->SetVideoVideoStabilisation(config_media::video_stabilisation);
+    mmal_encoder_->SetVideoShutter(config_media::video_shutter);
+    mmal_encoder_->SetVideoZoom(config_media::video_zoom, config_media::video_cord);
+    mmal_encoder_->SetVideoGain(config_media::video_analog_gain, config_media::video_digital_gain);
 
     // Video Annotation
     mmal_encoder_->SetVideoAnnotate(config_media::video_enable_annotate_text);

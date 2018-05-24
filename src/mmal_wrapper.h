@@ -192,6 +192,9 @@ public:
     void SetVideoAwbMode(const std::string awb_mode);
     void SetVideoDrcMode(const std::string drc_mode);
     void SetVideoVideoStabilisation(bool stab_enable);
+    void SetVideoShutter(int shutter);
+    void SetVideoZoom(float zoom, float cord);
+    void SetVideoGain(float again, float dgain);
 
     // Callback Functions
     void OnBufferCallback(MMAL_PORT_T *port, MMAL_BUFFER_HEADER_T *buffer);

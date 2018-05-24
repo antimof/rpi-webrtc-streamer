@@ -462,6 +462,23 @@ void MMALEncoderWrapper::SetVideoVideoStabilisation(bool stab_enable) {
     state_.camera_parameters.videoStabilisation  = stab_enable;
 }
 
+void MMALEncoderWrapper::SetVideoShutter(int shutter) {
+    state_.camera_parameters.shutter_speed = shutter;
+    
+}
+
+void MMALEncoderWrapper::SetVideoGain(float again, float dgain) {
+    state_.camera_parameters.analog_gain =  again;
+    state_.camera_parameters.digital_gain = dgain;
+}
+
+void MMALEncoderWrapper::SetVideoZoom(float zoom, float cord) {
+    state_.camera_parameters.roi.w = zoom;
+    state_.camera_parameters.roi.h = zoom;
+    state_.camera_parameters.roi.x = cord;
+    state_.camera_parameters.roi.y = cord;
+}
+
 bool MMALEncoderWrapper::InitEncoder(int width, int height, int framerate,
         int bitrate) {
     MMAL_STATUS_T status = MMAL_SUCCESS;

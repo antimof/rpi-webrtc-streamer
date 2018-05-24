@@ -130,4 +130,29 @@ webrtc::VideoRotation FakeVideoCapturer::GetRotation() {
   return rotation_;
 }
 
+FakeVideoCapturerWithTaskQueue::FakeVideoCapturerWithTaskQueue(
+    bool is_screencast)
+    : FakeVideoCapturer(is_screencast) {}
+
+FakeVideoCapturerWithTaskQueue::FakeVideoCapturerWithTaskQueue() {}
+
+bool FakeVideoCapturerWithTaskQueue::CaptureFrame() {
+  if (task_queue_.IsCurrent())
+    return FakeVideoCapturer::CaptureFrame();
+  bool ret = false;
+  task_queue_.SendTask(
+      [this, &ret]() { ret = FakeVideoCapturer::CaptureFrame(); });
+  return ret;
+}
+
+bool FakeVideoCapturerWithTaskQueue::CaptureCustomFrame(int width, int height) {
+  if (task_queue_.IsCurrent())
+    return FakeVideoCapturer::CaptureCustomFrame(width, height);
+  bool ret = false;
+  task_queue_.SendTask([this, &ret, width, height]() {
+    ret = FakeVideoCapturer::CaptureCustomFrame(width, height);
+  });
+  return ret;
+}
+
 }  // namespace cricket

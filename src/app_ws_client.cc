@@ -37,16 +37,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "websocket_server.h"
 #include "app_ws_client.h"
 #include "utils.h"
+#include "config_media.h"
 
 static const char kKeyCmd[] = "cmd";
 static const char kValueCmdRegister[] = "register";
 static const char kValueCmdSend[] = "send";
-
+static const char kJsonCmdSet[] = "set";
 static const char kKeyRegisterRoomId[] = "roomid";
 static const char kKeyRegisterClientId[] = "clientid";
 static const char kKeyCmdSendMessage[] = "msg";
 static const char kKeyCmdSendType[] = "type";
 static const char kValueCmdSendTypeBye[] = "bye";
+static const char kJsonSetBrightness[] = "brightness";
+static const char kJsonSetContrast[] = "contrast";
+static const char kJsonSetShutter[] = "shutter";
+static const char kJsonSetAgain[] = "again";
+static const char kJsonSetDgain[] = "dgain";
+static const char kJsonSetVflip[] = "vflip";
+static const char kJsonSetHflip[] = "hflip";
+static const char kJsonSetDr[] = "dres";
+static const char kJsonSetZoom[] = "zoom";
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -182,6 +192,41 @@ bool AppWsClient::OnMessage(int sockid, const std::string& message) {
                 return true;
             }
             RTC_LOG(LS_ERROR) << "Failed to pass received message :" << message;
+        }
+        // command set
+	else if(cmd.compare(kJsonCmdSet)== 0) {
+            int br, co, ss, ag, dg, zm; 
+	    bool vf, hf, dr;
+	    RTC_LOG(LS_ERROR) << "Received message :" << json_value; 
+	    if( !rtc::GetIntFromJsonObject(json_value, kJsonSetBrightness, &br) ||
+                !rtc::GetIntFromJsonObject(json_value, kJsonSetContrast, &co) ||
+                !rtc::GetIntFromJsonObject(json_value, kJsonSetShutter, &ss) ||
+                !rtc::GetIntFromJsonObject(json_value, kJsonSetAgain, &ag) ||
+                !rtc::GetIntFromJsonObject(json_value, kJsonSetDgain, &dg) ||
+                !rtc::GetBoolFromJsonObject(json_value, kJsonSetVflip, &vf) ||
+                !rtc::GetBoolFromJsonObject(json_value, kJsonSetHflip, &hf) ||
+		!rtc::GetBoolFromJsonObject(json_value, kJsonSetDr, &dr) ||
+ 	        !rtc::GetIntFromJsonObject(json_value, kJsonSetZoom, &zm)
+		) {
+                RTC_LOG(LS_ERROR) << "Wrong params :" << vf;
+                return true;
+            }
+	    config_media::video_brightness=br;
+	    config_media::video_contrast=co;
+	    config_media::video_shutter=ss;
+	    config_media::video_analog_gain=ag;
+	    config_media::video_digital_gain=dg;
+	    config_media::video_vflip=vf;
+	    config_media::video_hflip=hf;
+	    config_media::use_dynamic_video_resolution=dr;
+	    if ( zm != 100 ) {
+		config_media::video_cord=0.25;        
+	        config_media::video_zoom=(float)zm/100;
+	    }
+            else {
+		config_media::video_cord=0;
+ 		config_media::video_zoom=(float)zm/100;
+	    };        
         }
         return true;
     };

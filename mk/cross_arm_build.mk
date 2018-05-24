@@ -15,7 +15,7 @@ RANLIB=arm-linux-gnueabihf-ranlib
 # WebRTC source tree and object directory 
 # 
 WEBRTC_ROOT=$(HOME)/Workspace/webrtc
-WEBRTC_OUTPUT=arm_build
+WEBRTC_OUTPUT=arm_build_v6
 WEBRTC_LIBPATH=$(WEBRTC_ROOT)/src/$(WEBRTC_COUTPUT)
 
 ## WebRTC library build script

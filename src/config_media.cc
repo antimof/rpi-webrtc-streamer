@@ -98,6 +98,11 @@ CONFIG_DEFINE( VideoFlickerMode, video_flicker_mode, std::string, "auto" );
 CONFIG_DEFINE( VideoAwbMode, video_awb_mode, std::string, "auto" );
 CONFIG_DEFINE( VideoDrcMode, video_drc_mode, std::string, "off" );
 CONFIG_DEFINE( VideoStabilisation,  video_stabilisation, bool, false );
+CONFIG_DEFINE( VideoShutter, video_shutter, int, 0);
+CONFIG_DEFINE( VideoAGain, video_analog_gain, float, 0);
+CONFIG_DEFINE( VideoDGain, video_digital_gain, float, 0);
+CONFIG_DEFINE( VideoZoom, video_zoom, float, 1);
+CONFIG_DEFINE( VideoCord, video_cord, float, 0);
 
 // Video Annotation
 CONFIG_DEFINE( VideoEnableAnnotateText, video_enable_annotate_text, bool, false );
